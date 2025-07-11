@@ -62,37 +62,11 @@ def calculate_probability(total_cards, cards_to_draw, desired_card_counts):
 
 # --- 예제 사용법 ---
 if __name__ == "__main__":
-    # 예제 1: 스페이드(13장), 다이아(13장)가 있는 총 52장의 카드 덱에서 5장을 뽑을 때,
-    # 스페이드와 다이아를 각각 1장 이상 뽑을 확률
-    N1 = 52  # 전체 카드
+    N1 = 5  # 전체 카드
     M1 = 5   # 뽑는 카드 수
-    T1 = 2   # 원하는 종류
-    X1 = [13, 13] # 스페이드 13장, 다이아 13장
+    X1 = [1, 1, 1, 1, 1] # 스페이드 13장, 다이아 13장
     
     prob1 = calculate_probability(N1, M1, X1)
-    print(f"예제 1: N={N1}, M={M1}, 원하는 카드 종류={T1} ({X1}장씩)")
+    print(f"예제 1: N={N1}, M={M1}, 원하는 카드 종류={len(X1)} ({X1}장씩)")
     print(f"확률: {prob1:.4f} ({prob1*100:.2f}%)")
-    print("-" * 20)
-
-    # 예제 2: 총 20장의 카드 (A카드 4장, B카드 3장, C카드 2장, 나머지 11장)
-    # 이 중에서 10장을 뽑을 때, A, B, C 카드를 각각 1장 이상 뽑을 확률
-    N2 = 20
-    M2 = 10
-    T2 = 3
-    X2 = [4, 3, 2] # A, B, C 카드의 매수
-    
-    prob2 = calculate_probability(N2, M2, X2)
-    print(f"예제 2: N={N2}, M={M2}, 원하는 카드 종류={T2} ({X2}장씩)")
-    print(f"확률: {prob2:.4f} ({prob2*100:.2f}%)")
-    print("-" * 20)
-
-    # 예제 3: 10장의 카드 (A 2장, B 2장, C 2장, 나머지 4장)
-    # 5장을 뽑을 때 A, B, C를 모두 1장 이상 뽑을 확률
-    N3 = 40
-    M3 = 5
-    X3 = [3]
-    
-    prob3 = calculate_probability(N3, M3, X3)
-    print(f"예제 3: N={N3}, M={M3}, 원하는 카드 종류={len(X3)} ({X3}장씩)")
-    print(f"확률: {prob3:.4f} ({prob3*100:.2f}%)")
     print("-" * 20)
