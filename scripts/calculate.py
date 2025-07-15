@@ -55,11 +55,3 @@ def calculate_total_prob(cases_prob: list[float]) -> float:
     # 1에서 모두 실패할 확률을 빼 성공 확률을 반환
     total_success_prob = 1 - total_fail_prob
     return total_success_prob
-
-# 테스트용
-if __name__ == '__main__':
-    cases = [
-        calculate_firstmove_prob(40, 5, i)
-        for i in ((3,), (3,), (3,), (2,), (2, 3), (1,))
-    ]
-    print(f'{calculate_total_prob(cases):.2%}')
