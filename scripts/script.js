@@ -1,11 +1,5 @@
-async function main() {
-    let pyodide = await loadPyodide();
-    // Pyodide is now ready to use...
-    $('#test').html(pyodide.runPython(`
-        import sys
-
-        sys.version
-    `))
-};
-
-main();
+$('#btn').on('click', function() {
+    $('body').append(`
+        <p>${pyodide.runPython('f"{calculate_firstmove_prob(40, 5, 3):.2%}"')}</p>
+    `)
+});
