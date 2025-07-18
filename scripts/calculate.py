@@ -38,7 +38,6 @@ def _hand_combination(deck: int, draw: int, cards_tuple: tuple[tuple[str, int]],
     
     card, req = case_tuple[0]
     remain_case = case_tuple[1:]
-    
     card_cnt = cards.get(card, 0)
     deck -= card_cnt
     

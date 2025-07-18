@@ -7,37 +7,52 @@
         <title>ygoFirstMove | 유희왕 초동 계산기</title>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/pyodide/v0.28.0/full/pyodide.js"></script>
-        <script defer src="./scripts/pyodide_loader.js"></script>
+        <script src="./scripts/pyodide_loader.js"></script>
         <script defer src="./scripts/script.js"></script>
+        <link rel="stylesheet" href="./style/layout.css">
     </head>
     <body>
-        <h2>유희왕 초동 확률 계산기</h2>
-        <hr>
-        <label for="deck">덱 매수</label>
-        <input id="deck" type="number" value="40" min="1" max="60"> |
-        <label for="draw">드로우 장수</label>
-        <input id="draw" type="number" value="5" min="1" max="60">
-        <br>
-        초동 매수
-        <div>
-            <div>
-                <input class="card" type="text" placeholder="초동 이름">
-                <input class="cnt" type="number" value="3" min="1" max="60">
+        <div class="container">
+            <h2>유희왕 초동 확률 계산기</h2>
+            <hr>
+            <div class="settings">
+                <label for="deck">덱 매수</label>
+                <input id="deck" type="number" value="40" min="1" max="60">
+                <label for="draw">드로우 장수</label>
+                <input id="draw" type="number" value="5" min="1" max="60">
             </div>
-            <button>+</button><button hidden>-</button>
+            <br>
+            초동 매수
+        <div id="card_list">
+            <div class="card">
+                <input class="card_name" type="text" placeholder="초동 이름">
+                <input class="card_cnt" type="number" value="3" min="1" max="60">
+            </div>
+            <div class="button-group">
+                <button id="add_card_list">+</button>
+                <button hidden id="sub_card_list">-</button>
+            </div>
         </div>
+        <br>
         초동 조합
-        <div>
-            <div>
-                <select class="card">
-                    <option disabled selected value="">카드 선택</option>
-                </select>
-                <input class="cnt" type="number" value="1" min="1" max="60">
+        <div id="combo_list">
+            <div class="combo">
+                <div class="card">
+                    <select class="card_name">
+                        <option disabled selected value="">카드 선택</option>
+                    </select>
+                    <input class="card_cnt" type="number" value="1" min="0" max="60">
+                </div>
+                <button id="add_combo">+</button>
+                <button hidden id="sub_combo">-</button>
             </div>
-            <button>+</button><button hidden>-</button>
+            <div class="button-group">
+                <button id="add_combo_list">+</button>
+                <button hidden id="sub_combo_list">-</button>
+            </div>
         </div>
-        <button>+</button><button hidden>-</button>
         <br>
-        <button>계산하기</button>
+        <button id="calculate">계산하기</button>
+        <table id="result"></table>
     </body>
 </html>

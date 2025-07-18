@@ -1,0 +1,80 @@
+div#card_list, div#combo_list {
+    padding: 10px;
+    width: 300px;
+}
+
+div.card {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.card_name {
+    flex-grow: 1;
+    margin-right: 5px;
+}
+
+.combo {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    margin-bottom: 5px;
+}
+
+.combo > .card {
+    flex-grow: 1;
+}
+
+/* 콤보 내부 요소 높이 통일 */
+#card_list input,
+.combo .card select,
+.combo .card input,
+.combo > button {
+    height: 30px;
+    box-sizing: border-box;
+}
+
+/* 버튼과 버튼 사이에 간격 추가 */
+button + button {
+    margin-left: 5px;
+}
+
+/* 콤보 내부 요소들 사이에 간격 추가 */
+.combo > * + * {
+    margin-left: 5px;
+}
+
+/* +/- 버튼 크기 고정 */
+div#card_list button,
+div#combo_list button {
+    padding: 0px 10px;
+}
+
+/* 리스트 추가/삭제 버튼 그룹 */
+.button-group {
+    display: flex;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.button-group button {
+    flex-grow: 1;
+    width: 50%;
+}
+
+/* 결과 테이블 스타일 */
+table#result {
+    width: 400px;
+    margin-top: 10px;
+    border-collapse: collapse;
+    box-sizing: border-box;
+}
+
+table#result td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+/* 마지막 행 (전체 확률) 강조 */
+table#result tr:last-child td {
+    font-weight: bold;
+}

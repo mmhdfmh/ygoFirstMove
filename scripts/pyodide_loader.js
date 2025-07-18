@@ -1,4 +1,5 @@
 var pyodide = null;
+var total_prob = null;
 
 async function main() {
     pyodide = await loadPyodide();
@@ -12,6 +13,7 @@ async function main() {
 
         from calculate import *
     `);
+    total_prob = pyodide.globals.get('total_prob');
     
     console.log(pyodide.runPython(`
         print('pyodide load.')
