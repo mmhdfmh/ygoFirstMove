@@ -1,5 +1,5 @@
 let cards = {};
-let share_data = '';
+let share_data = [40, 5, {}, [{}]];
 
 // cards와 select의 카드 이름 동기화
 function sync_cardname() {
@@ -152,7 +152,6 @@ $('button#calculate').on('click', function() {
         draw = parseInt($('input#draw').val()),
         cards_py = pyodide.toPy(cards),
         cases = get_cases();
-    share_code = '';
 
     if(deck < draw)
         alert('덱의 매수가 드로우할 카드보다 적습니다.');
@@ -160,6 +159,7 @@ $('button#calculate').on('click', function() {
         alert('초동 조합을 입력해야합니다.');
     else {
         $(this).html('계산중...');
+        $('button#share').hide();
         let $table = $('table#result');
         $table.empty();
         $table.append(`
@@ -187,23 +187,76 @@ $('button#calculate').on('click', function() {
                 <td colspan="2">${Math.round(total * 10000) / 100}%</td>
             </tr>
         `);
-        // share_data = [deck, draw, {...cards}, cases];
-        // $table.after(`
-        //     <button id="share">공유하기</button>
-        // `);
+        share_data = [deck, draw, {...cards}, cases];
+        $('button#share').show();
         $(this).html('계산하기');
     }
 });
 
-// // 공유 (base64 사용)
-// $('body').on('click', 'button#share', function() {
-//     if(share_code != '') {
-//         navigator.clipboard.writeText(share_code);
-//         alert('코드가 복사되었습니다.');
-//     }
-// });
+function tobase91(obj) {
+    return base91.encode(
+        pako.deflate(
+            new TextEncoder().encode(
+                JSON.stringify(obj)
+            )
+        )
+    );
+}
 
-// // 로드 (클립보드 사용)
-// $('button#load').on('click', function() {
+// 공유 (base64 사용)
+$('body').on('click', 'button#share', function() {
+    let share_code = tobase91(share_data);
+    navigator.clipboard.writeText(share_code);
+    alert('코드가 복사되었습니다.');
+});
 
-// });
+function atbase91(encode_str) {
+    return JSON.parse(
+        new TextDecoder().decode(
+            pako.inflate(
+                base91.decode(encode_str)
+            )
+        )
+    );
+}
+
+// 로드 (클립보드 사용)
+$('button#load').on('click', async function() {
+    if(window.confirm('클립보드에서 코드를 불러옵니다.')) {
+        try {
+            let code = await navigator.clipboard.readText();
+            let load_data = atbase91(code);
+
+            $('input#deck').val(load_data[0]);
+            $('input#draw').val(load_data[1]);
+
+            $('div#card_list div.card').remove();
+            $('button#add_card_list').click();
+            Object.entries(load_data[2]).forEach(function([key, value]) {
+                let card = $('div#card_list div.card').last();
+                card.find('input.card_name').val(key);
+                card.find('input.card_cnt').val(value);
+                $('button#add_card_list').click();
+            });
+            $('button#sub_card_list').click();
+
+            $('div#combo_list div.combo').remove();
+            $('button#add_combo_list').click();
+            load_data[3].forEach(function(item) {
+                Object.entries(item).forEach(function([key, value]) {
+                    let card = $('div.combo div.card').last();
+                    card.find('select.card_name').val(key);
+                    card.find('input.card_cnt').val(value);
+                    $('button#add_combo').last().click();
+                });
+                $('button#sub_combo').last().click();
+                $('button#add_combo_list').click();
+            });
+            $('button#sub_combo_list').click();
+
+            $('button#calculate').click();
+        } catch(e) {
+            alert('올바르지 않은 코드입니다.');
+        }
+    }
+});
