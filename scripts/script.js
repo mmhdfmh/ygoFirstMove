@@ -157,7 +157,10 @@ $('button#calculate').on('click', function() {
         alert('덱의 매수가 드로우할 카드보다 적습니다.');
     else if(cases.length == 0)
         alert('초동 조합을 입력해야합니다.');
-    else {
+    else if(total_prob == null) {
+        $(this).html('계산중...');
+        setTimeout(function() {$('button#calculate').click()}, 500);
+    } else {
         $(this).html('계산중...');
         $('button#share').hide();
         let $table = $('table#result');
@@ -254,10 +257,9 @@ $('button#load').on('click', async function() {
                 $('button#add_combo_list').click();
             });
             $('button#sub_combo_list').click();
-
-            $('button#calculate').click();
         } catch(e) {
             alert('올바르지 않은 코드입니다.');
         }
+        $('button#calculate').click();
     }
 });
