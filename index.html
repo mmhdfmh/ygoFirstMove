@@ -7,6 +7,8 @@
         <title>ygoFirstMove | 유희왕 초동 계산기</title>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/pyodide/v0.28.0/full/pyodide.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@msgpack/msgpack/dist/msgpack.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-G2RG0M0QP0"></script>
         <script>
@@ -62,6 +64,7 @@
         </div>
         <br>
         <button id="calculate">계산하기</button>
+        <button id="load">불러오기</button>
         <table id="result"></table>
     </body>
 </html>

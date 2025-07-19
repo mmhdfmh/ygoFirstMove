@@ -1,4 +1,5 @@
 let cards = {};
+let share_data = '';
 
 // cards와 select의 카드 이름 동기화
 function sync_cardname() {
@@ -32,6 +33,7 @@ function sync_cardname() {
 
 // 초동 카드 입력시 동기화
 $('div#card_list').on('change', 'input.card_name', sync_cardname);
+$('div#card_list').on('change', 'input.card_cnt', sync_cardname);
 
 // 초동 카드 추가
 $('button#add_card_list').on('click', function() {
@@ -150,8 +152,13 @@ $('button#calculate').on('click', function() {
         draw = parseInt($('input#draw').val()),
         cards_py = pyodide.toPy(cards),
         cases = get_cases();
+    share_code = '';
 
-    if(cases.length > 0) {
+    if(deck < draw)
+        alert('덱의 매수가 드로우할 카드보다 적습니다.');
+    else if(cases.length == 0)
+        alert('초동 조합을 입력해야합니다.');
+    else {
         $(this).html('계산중...');
         let $table = $('table#result');
         $table.empty();
@@ -180,7 +187,23 @@ $('button#calculate').on('click', function() {
                 <td colspan="2">${Math.round(total * 10000) / 100}%</td>
             </tr>
         `);
+        // share_data = [deck, draw, {...cards}, cases];
+        // $table.after(`
+        //     <button id="share">공유하기</button>
+        // `);
         $(this).html('계산하기');
-    } else
-        alert('초동 조합을 입력해주세요.');
+    }
 });
+
+// // 공유 (base64 사용)
+// $('body').on('click', 'button#share', function() {
+//     if(share_code != '') {
+//         navigator.clipboard.writeText(share_code);
+//         alert('코드가 복사되었습니다.');
+//     }
+// });
+
+// // 로드 (클립보드 사용)
+// $('button#load').on('click', function() {
+
+// });

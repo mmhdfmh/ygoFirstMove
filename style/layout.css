@@ -65,6 +65,7 @@ div#combo_list button {
 table#result {
     width: 400px;
     margin-top: 10px;
+    margin-bottom: 10px;
     border-collapse: collapse;
     box-sizing: border-box;
 }
