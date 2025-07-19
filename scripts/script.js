@@ -225,6 +225,7 @@ $('button#load').on('click', async function() {
     if(window.confirm('클립보드에서 코드를 불러옵니다.')) {
         try {
             let code = await navigator.clipboard.readText();
+            code = code.replace(/\s+/g, '');
             let load_data = atbase91(code);
 
             $('input#deck').val(load_data[0]);
