@@ -152,25 +152,35 @@ $('button#calculate').on('click', function() {
         cases = get_cases();
 
     if(cases.length > 0) {
+        $(this).html('계산중...');
         let $table = $('table#result');
         $table.empty();
+        $table.append(`
+            <tr>
+                <td>덱</td>
+                <td>${deck}장</td>
+                <td>드로우</td>
+                <td>${draw}장</td>
+            </tr>
+        `);
         cases.forEach(function(item) {
             let title = Object.entries(item).map(([key, value]) => `${key} * ${value}`).join(' + '),
                 result = total_prob(deck, draw, cards_py, pyodide.toPy([item]));
             $table.append(`
                 <tr>
-                    <td>${title}</td>
-                    <td>${Math.round(result * 10000) / 100}%</td>
+                    <td colspan="2">${title}</td>
+                    <td colspan="2">${Math.round(result * 10000) / 100}%</td>
                 </tr>
             `);
         });
         let total = total_prob(deck, draw, cards_py, pyodide.toPy(cases));
         $table.append(`
             <tr>
-                <td>전체 확률</td>
-                <td>${Math.round(total * 10000) / 100}%</td>
+                <td colspan="2">전체 확률</td>
+                <td colspan="2">${Math.round(total * 10000) / 100}%</td>
             </tr>
         `);
+        $(this).html('계산하기');
     } else
         alert('초동 조합을 입력해주세요.');
 });
