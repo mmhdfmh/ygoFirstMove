@@ -14,6 +14,16 @@ function sync_cardname() {
             `);
         }
     });
+
+    let $deck = $('input#deck'),
+        $draw = $('input#draw'),
+        cards_cnt = Object.values(cards).reduce(function (a, b) {
+            return a + b
+        }, 0);
+    if(parseInt($deck.val()) < cards_cnt)
+        $deck.val(cards_cnt);
+    if(parseInt($deck.val()) < parseInt($draw.val()))
+        $draw.val($deck.val());
     
     $('select.card_name').each(function() {
         let selected = $(this).val();
@@ -31,7 +41,9 @@ function sync_cardname() {
     });
 }
 
-// 초동 카드 입력시 동기화
+// 정보 입력시 동기화
+$('input#deck').on('change', sync_cardname);
+$('input#draw').on('change', sync_cardname);
 $('div#card_list').on('change', 'input.card_name', sync_cardname);
 $('div#card_list').on('change', 'input.card_cnt', sync_cardname);
 
@@ -153,9 +165,7 @@ $('button#calculate').on('click', function() {
         cards_py = pyodide.toPy(cards),
         cases = get_cases();
 
-    if(deck < draw)
-        alert('덱의 매수가 드로우할 카드보다 적습니다.');
-    else if(cases.length == 0)
+    if(cases.length == 0)
         alert('초동 조합을 입력해야합니다.');
     else if(total_prob == null) {
         $(this).html('계산중...');
