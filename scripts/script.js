@@ -41,6 +41,27 @@ function sync_cardname() {
     });
 }
 
+function clear_data() {
+    cards = {};
+    share_data = [40, 5, {}, [{}]];
+
+    $('input#deck').val(40);
+    $('input#draw').val(5);
+
+    $('div#card_list div.card').remove();
+    $('button#add_card_list').click();
+
+    $('div#combo_list div.combo').remove();
+    $('button#add_combo_list').click();
+
+    $('table#result').empty();
+    $('button#share').hide();
+
+    $('div#card_list div.card input.card_name').first().focus()
+}
+
+$('h2#reset').on('click', clear_data);
+
 // 정보 입력시 동기화
 $('input#deck').on('change', sync_cardname);
 $('input#draw').on('change', sync_cardname);
@@ -188,7 +209,7 @@ $('button#calculate').on('click', function() {
                 result = total_prob(deck, draw, cards_py, pyodide.toPy([item]));
             $table.append(`
                 <tr>
-                    <td colspan="2">${title}</td>
+                    <td colspan="2" class="title-input"><input class="title" type="text" value="${title}"></td>
                     <td colspan="2">${Math.round(result * 10000) / 100}%</td>
                 </tr>
             `);
@@ -267,9 +288,10 @@ $('button#load').on('click', async function() {
                 $('button#add_combo_list').click();
             });
             $('button#sub_combo_list').click();
+
+            $('button#calculate').click();
         } catch(e) {
             alert('올바르지 않은 코드입니다.');
         }
-        $('button#calculate').click();
     }
 });

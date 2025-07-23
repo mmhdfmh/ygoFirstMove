@@ -13,7 +13,7 @@ async function main() {
 
         from calculate import *
     `);
-    total_prob = pyodide.globals.get('total_prob');
+    total_prob = pyodide.globals.get('total_prob_optimized');
     
     console.log(pyodide.runPython(`
         print('pyodide load.')

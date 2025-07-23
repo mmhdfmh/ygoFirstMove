@@ -63,3 +63,31 @@ def total_prob(deck: int, draw: int, cards: dict[str, int], cases: list[dict[str
             
     success_prob = success_combination / total_combination
     return success_prob
+
+def total_prob_optimized(deck: int, draw: int, cards: dict[str, int], cases: list[dict[str, int]]) -> float:
+    total_combination = math.comb(deck, draw)
+    if total_combination == 0:
+        return 0.
+    
+    merge_cases = {tuple(): 1}
+    for case in cases:
+        next_merge = merge_cases.copy()
+        for merge_case_tuple, coeff in merge_cases.items():
+            merge_case = dict(merge_case_tuple)
+            
+            new_merge = _reduce_rule_max_value(merge_case, case)
+            
+            if new_merge != None:
+                new_m_tuple = tuple(sorted(new_merge.items()))
+                next_merge[new_m_tuple] = next_merge.get(new_m_tuple, 0) - coeff
+        merge_cases = next_merge
+
+    success_combination = 0
+    cards_tuple = tuple(sorted(cards.items()))
+    for merge_case_tuple, coeff in merge_cases.items():
+        if merge_case_tuple:
+            term = _hand_combination(deck, draw, cards_tuple, merge_case_tuple)
+            success_combination -= coeff * term
+            
+    success_prob = success_combination / total_combination
+    return success_prob
