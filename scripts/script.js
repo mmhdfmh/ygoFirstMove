@@ -1,8 +1,12 @@
 let cards = {};
 let share_data = [40, 5, {}, [{}]];
+let table = '';
+let digits = 2;
 
 // cards와 select의 카드 이름 동기화
 function sync_cardname() {
+    console.log('sync_cardname');
+
     cards = {};
     $('div.card').each(function() {
         let key = $(this).find('input.card_name').val();
@@ -42,22 +46,29 @@ function sync_cardname() {
 }
 
 function clear_data() {
+    console.log('clear_data');
+
     cards = {};
     share_data = [40, 5, {}, [{}]];
+    table = '';
+    digits = 2;
 
     $('input#deck').val(40);
     $('input#draw').val(5);
 
     $('div#card_list div.card').remove();
     $('button#add_card_list').click();
+    $('button#sub_card_list').hide();
 
     $('div#combo_list div.combo').remove();
     $('button#add_combo_list').click();
+    $('button#sub_combo_list').hide();
 
     $('table#result').empty();
-    $('button#share').hide();
+    $('input#digits').val(digits);
+    $('div#results').hide();
 
-    $('div#card_list div.card input.card_name').first().focus()
+    // $('div#card_list div.card input.card_name').first().focus()
 }
 
 $('h2#reset').on('click', clear_data);
@@ -162,13 +173,14 @@ $('button#sub_combo_list').on('click', function() {
 
 // div#combo_list를 Array[Object] 형태로 반환
 function get_cases() {
+    console.log('get_cases');
+    
     let cases = [];
     $('div#combo_list div.combo').each(function() {
         let combo = {};
         $(this).find('div.card').each(function() {
-            let key = $(this).find('select.card_name').val();
-            let value = parseInt($(this).find('input.card_cnt').val());
-
+            let key = $(this).find('select.card_name').val(),
+            value = parseInt($(this).find('input.card_cnt').val());
             if(key && key != '')
                 combo[key] = value;
         });
@@ -179,12 +191,28 @@ function get_cases() {
     return cases;
 }
 
+// 결과 테이블 갱신
+function print_table() {
+    let $table = $('table#result');
+    $table.html(table);
+    $table.find('td.prob').each(function() {
+        let prob = parseFloat($(this).html());
+        $(this).html(prob.toFixed(digits) + '%');
+    });
+
+    $('div#results').show();
+}
+
 // 계산 (pyodide 사용)
-$('button#calculate').on('click', function() {
+function calculate() {
+    console.log('calculate');
+
     let deck = parseInt($('input#deck').val()),
         draw = parseInt($('input#draw').val()),
         cards_py = pyodide.toPy(cards),
         cases = get_cases();
+
+    console.log(cases);
 
     if(cases.length == 0)
         alert('초동 조합을 입력해야합니다.');
@@ -193,41 +221,45 @@ $('button#calculate').on('click', function() {
         setTimeout(function() {$('button#calculate').click()}, 500);
     } else {
         $(this).html('계산중...');
-        $('button#share').hide();
-        let $table = $('table#result');
-        $table.empty();
-        $table.append(`
+        $('div#results').hide();
+        table = `
             <tr>
                 <td>덱</td>
                 <td>${deck}장</td>
                 <td>드로우</td>
                 <td>${draw}장</td>
             </tr>
-        `);
+        `;
         cases.forEach(function(item) {
             let title = Object.entries(item).map(([key, value]) => `${key} * ${value}`).join(' + '),
                 result = total_prob(deck, draw, cards_py, pyodide.toPy([item]));
-            $table.append(`
+            table += `
                 <tr>
                     <td colspan="2" class="title-input"><input class="title" type="text" value="${title}"></td>
-                    <td colspan="2">${Math.round(result * 10000) / 100}%</td>
+                    <td class="prob" colspan="2">${result * 100}%</td>
                 </tr>
-            `);
+            `;
         });
         let total = total_prob(deck, draw, cards_py, pyodide.toPy(cases));
-        $table.append(`
+        table += `
             <tr>
                 <td colspan="2">전체 확률</td>
-                <td colspan="2">${Math.round(total * 10000) / 100}%</td>
+                <td class="prob" colspan="2">${total * 100}%</td>
             </tr>
-        `);
+        `;
+
         share_data = [deck, draw, {...cards}, cases];
-        $('button#share').show();
+        console.log(share_data);
+        print_table();
         $(this).html('계산하기');
     }
-});
+}
+
+$('button#calculate').on('click', calculate);
 
 function tobase91(obj) {
+    console.log('tobase91');
+
     return base91.encode(
         pako.deflate(
             new TextEncoder().encode(
@@ -245,6 +277,8 @@ $('body').on('click', 'button#share', function() {
 });
 
 function atbase91(encode_str) {
+    console.log('atbase91');
+
     return JSON.parse(
         new TextDecoder().decode(
             pako.inflate(
@@ -262,11 +296,11 @@ $('button#load').on('click', async function() {
             code = code.replace(/\s+/g, '');
             let load_data = atbase91(code);
 
+            clear_data();
+
             $('input#deck').val(load_data[0]);
             $('input#draw').val(load_data[1]);
 
-            $('div#card_list div.card').remove();
-            $('button#add_card_list').click();
             Object.entries(load_data[2]).forEach(function([key, value]) {
                 let card = $('div#card_list div.card').last();
                 card.find('input.card_name').val(key);
@@ -275,8 +309,6 @@ $('button#load').on('click', async function() {
             });
             $('button#sub_card_list').click();
 
-            $('div#combo_list div.combo').remove();
-            $('button#add_combo_list').click();
             load_data[3].forEach(function(item) {
                 Object.entries(item).forEach(function([key, value]) {
                     let card = $('div.combo div.card').last();
@@ -289,9 +321,25 @@ $('button#load').on('click', async function() {
             });
             $('button#sub_combo_list').click();
 
-            $('button#calculate').click();
+            calculate();
         } catch(e) {
             alert('올바르지 않은 코드입니다.');
         }
     }
+});
+
+// 소수점 자리수 감소
+$('button#sub_digits').on('click', function() {
+    if(digits > 0)
+        digits--;
+    $('input#digits').val(digits);
+    print_table();
+});
+
+// 소수점 자리수 증가
+$('button#add_digits').on('click', function() {
+    if(digits < 12)
+        digits++;
+    $('input#digits').val(digits);
+    print_table();
 });

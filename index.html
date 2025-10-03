@@ -22,7 +22,6 @@
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-G2RG0M0QP0');
         </script>
         <!-- End Google tag (gtag.js) -->
@@ -37,46 +36,57 @@
         <!-- End Google Tag Manager (noscript) -->
         <h2 id="reset">유희왕 초동 확률 계산기</h2>
         <hr>
-        <div class="settings">
-            <label for="deck">덱 매수</label>
-            <input id="deck" type="number" value="40" min="1" max="60">
-            <label for="draw">드로우 장수</label>
-            <input id="draw" type="number" value="5" min="1" max="60">
-        </div>
-        <br>
-        초동 매수
-        <div id="card_list">
-            <div class="card">
-                <input class="card_name" type="text" placeholder="초동 이름">
-                <input class="card_cnt" type="number" value="3" min="1" max="60">
-            </div>
-            <div class="button-group">
-                <button id="add_card_list">+</button>
-                <button hidden id="sub_card_list">-</button>
-            </div>
-        </div>
-        <br>
-        초동 조합
-        <div id="combo_list">
-            <div class="combo">
+        <label for="deck">덱 매수</label>
+        <input id="deck" type="number" value="40" min="1" max="60">
+        <label for="draw">드로우 장수</label>
+        <input id="draw" type="number" value="5" min="1" max="60">
+        <br><br>
+        <details open>
+            <summary>초동 매수</summary>
+            <div id="card_list">
                 <div class="card">
-                    <select class="card_name">
-                        <option disabled selected value="">카드 선택</option>
-                    </select>
-                    <input class="card_cnt" type="number" value="1" min="0" max="60">
+                    <input class="card_name" type="text" placeholder="초동 이름">
+                    <input class="card_cnt" type="number" value="3" min="1" max="60">
                 </div>
-                <button id="add_combo">+</button>
-                <button hidden id="sub_combo">-</button>
+                <div class="button_group">
+                    <button id="add_card_list">+</button>
+                    <button hidden id="sub_card_list">-</button>
+                </div>
             </div>
-            <div class="button-group">
-                <button id="add_combo_list">+</button>
-                <button hidden id="sub_combo_list">-</button>
+        </details>
+        <br>
+        <details open>
+            <summary>초동 조합</summary>
+            <div id="combo_list">
+                <div class="combo">
+                    <div class="card">
+                        <select class="card_name">
+                            <option disabled selected value="">카드 선택</option>
+                        </select>
+                        <input class="card_cnt" type="number" value="1" min="0" max="60">
+                    </div>
+                    <button id="add_combo">+</button>
+                    <button hidden id="sub_combo">-</button>
+                </div>
+                <div class="button_group">
+                    <button id="add_combo_list">+</button>
+                    <button hidden id="sub_combo_list">-</button>
+                </div>
             </div>
-        </div>
+        </details>
         <br>
         <button id="calculate">계산하기</button>
         <button id="load">불러오기</button>
-        <table id="result"></table>
-        <button hidden id="share">공유하기</button>
+        <div hidden id="results">
+            <table id="result"></table>
+            <div class="result_controls">
+                <button id="share">공유하기</button>
+                <div class="digit_controls">
+                    <button id="sub_digits"><</button>
+                    <input disabled id="digits" type="number" value="2">
+                    <button id="add_digits">></button>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
